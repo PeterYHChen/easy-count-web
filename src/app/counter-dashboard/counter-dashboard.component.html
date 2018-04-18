@@ -1,0 +1,22 @@
+<h2>{{ imageData.name }} Details</h2>
+
+<div>
+  <label>objectMinRadius:
+    <input [(ngModel)]="imageData.objectMinRadius" placeholder="objectMinRadius">
+  </label>
+</div>
+
+<div>
+  <label>objectMaxRadius:
+    <input [(ngModel)]="imageData.objectMaxRadius" placeholder="objectMaxRadius">
+  </label>
+</div>
+
+<div>
+  <label>objectColor:
+    <input [(ngModel)]="imageData.objectColor" placeholder="objectColor">
+  </label>
+</div>
+<div>
+  <input name="file" type="file" (change)="onSelectingFile($event)" />
+</div>
