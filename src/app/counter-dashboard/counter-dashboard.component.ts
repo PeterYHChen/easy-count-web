@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ImageData } from '../image-data';
+import { FileService } from '../services/file-service';
 
 @Component({
   selector: 'app-counter-dashboard',
   templateUrl: './counter-dashboard.component.html',
-  styleUrls: ['./counter-dashboard.component.css']
+  styleUrls: ['./counter-dashboard.component.css'],
+  providers: [FileService]
 })
 export class CounterDashboardComponent implements OnInit {
 
   imageData: ImageData = new ImageData();
 
-  constructor() { }
+  constructor(private fileService: FileService) { }
 
   ngOnInit() {
   }
@@ -19,17 +21,43 @@ export class CounterDashboardComponent implements OnInit {
     const files = event.target.files;
     const file = files[0];
     if (files && file) {
-      const reader = new FileReader();
+      const reader: FileReader = new FileReader();
 
-      reader.onload = this.handleReaderLoaded.bind(this);
-
-      reader.readAsBinaryString(file);
+      reader.onloadend = (e) => {
+        this.imageData.image = reader.result;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
-  handleReaderLoaded(readerEvt) {
-    const binaryString = readerEvt.target.result;
-    this.imageData.image = btoa(binaryString);
-    console.log(this.imageData);
+  uploadImage() {
+    if (!this.imageData.image) {
+      alert('Need to specific image');
+      return;
+    }
+
+    if (!this.imageData.objectMinRadius) {
+      alert('Need to specific objectMinRadius');
+      return;
+    }
+
+    if (!this.imageData.objectMaxRadius) {
+      alert('Need to specific objectMaxRadius');
+      return;
+    }
+
+    if (!this.imageData.objectColor) {
+      alert('Need to specific objectColor');
+      return;
+    }
+
+    this.fileService.evaluateImage(this.imageData)
+      .subscribe(
+        response => {
+          this.imageData = ImageData.parse(response);
+        }, err => {
+          console.log('error: ' + err);
+        }
+      );
   }
 }

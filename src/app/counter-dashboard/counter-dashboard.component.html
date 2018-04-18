@@ -18,5 +18,8 @@
   </label>
 </div>
 <div>
-  <input name="file" type="file" (change)="onSelectingFile($event)" />
+  <input name="file" type="file" accept="image/*" (change)="onSelectingFile($event)" />
 </div>
+<img *ngIf="imageData.image" [src]="imageData.image" width="300" />
+<button *ngIf="imageData.image" type="button" (click)="uploadImage()">Submit</button>
+<img *ngIf="imageData.resultImage" [src]="imageData.resultImage" width="300" />
